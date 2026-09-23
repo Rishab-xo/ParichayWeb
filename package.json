@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.10",
     "@perawallet/connect": "^1.5.0",
     "algosdk": "^3.5.2",
     "cors": "^2.8.6",

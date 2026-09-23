@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import '../styles/Navbar.css';
 
 const Navbar = () => {
@@ -20,8 +21,15 @@ const Navbar = () => {
                     <NavLink to="/how-it-works" className={({ isActive }) => (isActive ? 'active' : '')}>How it works</NavLink>
                 </div>
 
-                <div className="navbar-action">
-                    <button className="btn-primary">Start Anonymous</button>
+                <div className="navbar-action" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <SignedIn>
+                        <UserButton afterSignOutUrl="/" />
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="btn-primary">Sign In</button>
+                        </SignInButton>
+                    </SignedOut>
                 </div>
             </div>
         </nav>
@@ -29,3 +37,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
