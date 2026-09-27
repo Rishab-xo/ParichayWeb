@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Markdown } from 'tiptap-markdown';
@@ -7,6 +8,7 @@ import { exportDocument } from '../utils/api';
 
 const BriefEditor = ({ initialMarkdown = '' }) => {
     const [isExporting, setIsExporting] = useState(false);
+    const { getToken } = useAuth();
 
     // Initialize TipTap with the Markdown extension
     const editor = useEditor({
@@ -31,7 +33,12 @@ const BriefEditor = ({ initialMarkdown = '' }) => {
         const finalHtml = editor.getHTML();
 
         try {
-            const blob = await exportDocument(format, finalHtml);
+            let token = null;
+            try {
+                token = await getToken();
+            } catch {}
+
+            const blob = await exportDocument(format, finalHtml, token);
 
             // Trigger browser download
             const url = window.URL.createObjectURL(blob);

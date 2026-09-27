@@ -1,50 +1,37 @@
 import React, { useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useAuth, useClerk } from '@clerk/clerk-react';
 
 const JwtConsoleLogger = () => {
-    const { getToken, isSignedIn, userId } = useAuth();
-    const { user } = useUser();
+    const { getToken, isSignedIn, isLoaded } = useAuth();
+    const clerk = useClerk();
 
     useEffect(() => {
-        const handleToken = async () => {
+        if (!isLoaded) return;
+
+        window.openSignIn = () => clerk.openSignIn();
+
+        const logJwt = async () => {
             if (isSignedIn) {
                 try {
                     const token = await getToken();
-                    window.jwt = token;
-                    window.getJwt = () => token;
-                    window.copyJwt = () => {
-                        if (navigator.clipboard) {
-                            navigator.clipboard.writeText(token);
-                            console.log('%c✅ JWT Copied to Clipboard!', 'color: #10b981; font-weight: bold; font-size: 14px;');
-                        }
-                        return token;
-                    };
-
-                    console.log(
-                        '%c🔑 CLERK JWT TOKEN FOR BACKEND (Bearer Token) 🔑',
-                        'background: #ff5722; color: white; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 13px;'
-                    );
-                    console.log('%cToken:', 'color: #3b82f6; font-weight: bold;', token);
-                    console.log('%cAuthorization Header:', 'color: #10b981; font-weight: bold;', `Bearer ${token}`);
-                    console.log('%cUser ID:', 'color: #8b5cf6;', userId);
-                    console.log('%cTip: Run copyJwt() in console or use window.jwt to quickly access it.', 'color: #6b7280; font-style: italic;');
-
-                    // Auto-copy to clipboard
-                    if (navigator.clipboard && document.hasFocus()) {
-                        navigator.clipboard.writeText(token).catch(() => {});
+                    if (token) {
+                        console.log(`Bearer ${token}`);
+                        window.jwt = token;
                     }
                 } catch (err) {
-                    console.error('[Clerk JWT Logger Error]:', err);
+                    console.error('Failed to get JWT:', err);
                 }
             } else {
-                console.log('%c🔒 [Clerk Auth]: User is not signed in. Sign in to generate JWT.', 'color: #f59e0b; font-weight: bold;');
+                console.log('🔒 You are not signed in. Please click Sign In (or run openSignIn() in console) to get your Bearer token.');
             }
         };
 
-        handleToken();
-    }, [isSignedIn, getToken, userId, user]);
+        logJwt();
+    }, [isSignedIn, isLoaded, getToken, clerk]);
 
     return null;
 };
 
 export default JwtConsoleLogger;
+
+

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
-import { sendTriageChat, getTriageSession } from '../utils/api';
-import { Sparkles, ArrowRight, CheckCircle2, AlertCircle, RotateCcw, Circle, CheckCircle, Copy, Check, Plus } from 'lucide-react';
+import { sendTriageChat, getTriageSession, forceCompleteSession } from '../utils/api';
+import { Sparkles, ArrowRight, CheckCircle2, AlertCircle, RotateCcw, Circle, CheckCircle, Copy, Check, Plus, SkipForward, HelpCircle, Clock, AlertTriangle } from 'lucide-react';
 import '../styles/ChatPage.css';
 
 const LOCAL_STORAGE_KEY = 'refirm_active_triage';
@@ -82,6 +82,8 @@ const ChatPage = () => {
     });
 
     const [errorBanner, setErrorBanner] = useState(null);
+    const [showSoftGateModal, setShowSoftGateModal] = useState(false);
+    const [isForceCompleting, setIsForceCompleting] = useState(false);
     const messagesEndRef = useRef(null);
     const messagesContainerRef = useRef(null);
     const textareaRef = useRef(null);
@@ -207,9 +209,29 @@ const ChatPage = () => {
                     setStatus('READY_FOR_DRAFTING');
                 }
 
-                // Update fact checklist from AI response
+                // Merge fact checklist — never allow coverage to regress
                 if (triageResponse.factChecklist) {
-                    setFactChecklist(triageResponse.factChecklist);
+                    setFactChecklist(prev => {
+                        if (!prev) return triageResponse.factChecklist;
+                        const incoming = triageResponse.factChecklist;
+                        // Merge gathered facts: keep old, layer new on top
+                        const mergedGathered = { ...(prev.gatheredFacts || {}), ...(incoming.gatheredFacts || {}) };
+                        // Recalculate missing: only facts NOT in merged gathered
+                        const allMissing = new Set([
+                            ...(incoming.missingRequiredFacts || []),
+                            ...(prev.missingRequiredFacts || [])
+                        ]);
+                        const mergedMissing = [...allMissing].filter(f => !mergedGathered[f]);
+                        // Coverage never decreases
+                        const total = Object.keys(mergedGathered).length + mergedMissing.length;
+                        const calcCoverage = total > 0 ? Math.round((Object.keys(mergedGathered).length / total) * 100) : 0;
+                        const coverage = Math.max(calcCoverage, prev.coveragePercent || 0, incoming.coveragePercent || 0);
+                        return {
+                            gatheredFacts: mergedGathered,
+                            missingRequiredFacts: mergedMissing,
+                            coveragePercent: coverage
+                        };
+                    });
                 }
 
                 const botReply = triageResponse.reply || triageResponse.nextQuestion;
@@ -267,24 +289,81 @@ const ChatPage = () => {
         await processMessage(currentInput, sessionId);
     };
 
+    // Smart reply chip handler — sends a skip/don't-know message
+    const handleSmartReply = async (chipText, displayText) => {
+        const newUserMessage = {
+            id: Date.now(),
+            sender: 'user',
+            text: displayText || chipText
+        };
+        setMessages(prev => [...prev, newUserMessage]);
+        await processMessage(chipText, sessionId);
+    };
+
     const handleGenerateDraft = () => {
         const fullConversation = messages
             .map(m => `${m.sender.toUpperCase()}: ${m.text}`)
             .join('\n\n');
 
-        const factsPayload = extractedFacts.length > 0
-            ? extractedFacts.join('\n')
-            : fullConversation;
+        const gFacts = factChecklist?.gatheredFacts || {};
+        const structuredFactsList = Object.entries(gFacts)
+            .filter(([_, v]) => v && v !== 'UNKNOWN' && !String(v).includes('INFORMATION NOT PROVIDED'))
+            .map(([key, value]) => `- ${formatHumanText(key)}: ${value}`);
+
+        const structuredFactsText = structuredFactsList.length > 0
+            ? structuredFactsList.join('\n')
+            : (extractedFacts.length > 0 ? extractedFacts.join('\n') : fullConversation);
+
+        const rawDomain = (issueCategory && issueCategory !== 'Evaluating...') ? issueCategory : 'CIVIL_PROPERTY';
+        const categoryLabel = (issueCategory && issueCategory !== 'Evaluating...') ? formatHumanText(issueCategory) : 'General Legal';
 
         navigate('/document-flow', {
             state: {
-                docType: issueCategory !== 'Evaluating...' ? `${formatHumanText(issueCategory)} Brief` : 'Legal Brief',
-                facts: factsPayload,
-                domain: issueCategory !== 'Evaluating...' ? formatHumanText(issueCategory) : 'General Legal',
+                docType: `${categoryLabel} Petition Brief`,
+                facts: structuredFactsText,
+                gatheredFacts: gFacts,
+                domain: rawDomain,
+                categoryLabel: categoryLabel,
                 sessionId: sessionId,
                 autoGenerate: true
             }
         });
+    };
+
+    // ─── Soft Gate: Generate Document button logic ───
+    const handleGenerateDocumentClick = () => {
+        if (coveragePercent >= 70) {
+            // Coverage is sufficient — go directly to drafting
+            handleGenerateDraft();
+        } else {
+            // Coverage is low — show warning modal
+            setShowSoftGateModal(true);
+        }
+    };
+
+    const handleForceCompleteAndDraft = async () => {
+        if (!sessionId) return;
+        setIsForceCompleting(true);
+        try {
+            let token = null;
+            try { token = await getToken(); } catch {}
+
+            // Step 1: Force-complete the session on the backend
+            await forceCompleteSession(sessionId, token);
+
+            // Step 2: Update local state
+            setStatus('READY_FOR_DRAFTING');
+            setShowSoftGateModal(false);
+
+            // Step 3: Navigate to draft generation
+            handleGenerateDraft();
+        } catch (error) {
+            console.error('Force-complete failed:', error);
+            setErrorBanner(`Failed to override intake: ${error.message}`);
+            setShowSoftGateModal(false);
+        } finally {
+            setIsForceCompleting(false);
+        }
     };
 
     const handleKeyDown = (e) => {
@@ -412,13 +491,13 @@ const ChatPage = () => {
                 <div className="sidebar-section next-actions-section">
                     <h3>Next Actions</h3>
                     <div 
-                        className={`action-card ${isReadyForDrafting ? 'action-card-ready' : 'action-card-disabled'}`}
-                        onClick={isReadyForDrafting ? handleGenerateDraft : undefined}
+                        className={`action-card ${isReadyForDrafting ? 'action-card-ready' : hasChecklist ? 'action-card-warning' : 'action-card-disabled'}`}
+                        onClick={(isReadyForDrafting || hasChecklist) ? handleGenerateDocumentClick : undefined}
                     >
                         <span className="icon">📄</span>
                         <div className="action-info">
                             <h4>Generate Document</h4>
-                            <p>{isReadyForDrafting ? 'Draft ready to generate' : 'Complete intake first'}</p>
+                            <p>{isReadyForDrafting ? 'Draft ready to generate' : hasChecklist ? `${coveragePercent}% — Generate with gaps` : 'Start intake first'}</p>
                         </div>
                     </div>
                     <div className="action-card" onClick={() => navigate('/find-lawyer')}>
@@ -459,16 +538,78 @@ const ChatPage = () => {
                             </div>
                         )}
 
-                        {messages.map((msg) => (
-                            <div key={msg.id} className={`message-row ${msg.sender}`}>
-                                <div className="message-bubble">
-                                    {msg.sender === 'bot' && <div className="bot-avatar">P</div>}
-                                    <div className="message-text">
-                                        {msg.text}
+                        {messages.map((msg, index) => {
+                            const isLastBotMessage = msg.sender === 'bot' && 
+                                index === messages.length - 1 && 
+                                !isTyping;
+                            const showSmartChips = isLastBotMessage && 
+                                !isReadyForDrafting && 
+                                status === 'IN_PROGRESS';
+
+                            return (
+                                <div key={msg.id}>
+                                    <div className={`message-row ${msg.sender}`}>
+                                        <div className="message-bubble">
+                                            {msg.sender === 'bot' && <div className="bot-avatar">P</div>}
+                                            <div className="message-text">
+                                                {msg.text}
+                                            </div>
+                                        </div>
                                     </div>
+                                    {showSmartChips && (
+                                        <div className="smart-reply-chips fade-in">
+                                            {(factChecklist?.coveragePercent || 0) >= 80 ? (
+                                                <>
+                                                    <button 
+                                                        className="smart-chip chip-generate-brief"
+                                                        onClick={() => handleSmartReply("[COMPLETE] Generate my case brief with the gathered facts.", "Generate Case Brief")}
+                                                        disabled={isTyping}
+                                                    >
+                                                        <Sparkles size={13} />
+                                                        <span>Generate Case Brief</span>
+                                                    </button>
+                                                    <button 
+                                                        className="smart-chip chip-nothing-more"
+                                                        onClick={() => handleSmartReply("Nothing else to add, please prepare the brief.", "Nothing else to add")}
+                                                        disabled={isTyping}
+                                                    >
+                                                        <CheckCircle2 size={13} />
+                                                        <span>Nothing else to add</span>
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button 
+                                                        className="smart-chip chip-skip"
+                                                        onClick={() => handleSmartReply("[SKIP] I don't have this information right now.", "Skip this question")}
+                                                        disabled={isTyping}
+                                                    >
+                                                        <SkipForward size={13} />
+                                                        <span>Skip this</span>
+                                                    </button>
+                                                    <button 
+                                                        className="smart-chip chip-unknown"
+                                                        onClick={() => handleSmartReply("I don't know the answer to this.", "I don't know")}
+                                                        disabled={isTyping}
+                                                    >
+                                                        <HelpCircle size={13} />
+                                                        <span>I don't know</span>
+                                                    </button>
+                                                    <button 
+                                                        className="smart-chip chip-later"
+                                                        onClick={() => handleSmartReply("[SKIP] I'll find out this information later.", "I'll find out later")}
+                                                        disabled={isTyping}
+                                                    >
+                                                        <Clock size={13} />
+                                                        <span>I'll find out later</span>
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
 
                         {isTyping && (
                             <div className="message-row bot">
@@ -549,6 +690,54 @@ const ChatPage = () => {
                     </div>
                 </div>
             </main>
+
+            {/* ─── Soft Gate Warning Modal ─── */}
+            {showSoftGateModal && (
+                <div className="soft-gate-overlay" onClick={() => setShowSoftGateModal(false)}>
+                    <div className="soft-gate-modal fade-in" onClick={e => e.stopPropagation()}>
+                        <div className="soft-gate-header">
+                            <div className="soft-gate-icon-wrap">
+                                <AlertTriangle size={22} />
+                            </div>
+                            <h3>Incomplete Intake</h3>
+                        </div>
+                        <p className="soft-gate-description">
+                            Your fact checklist is at <strong>{coveragePercent}%</strong>. The drafted petition will contain <code>[INSERT ...]</code> placeholders for missing details, including:
+                        </p>
+                        <ul className="soft-gate-missing-list">
+                            {missingFacts.map(fact => (
+                                <li key={fact}>
+                                    <Circle size={8} />
+                                    <span>{formatHumanText(fact)}</span>
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="soft-gate-note">
+                            You can still edit and fill in these details in the document editor after generation.
+                        </p>
+                        <div className="soft-gate-actions">
+                            <button 
+                                className="soft-gate-btn-cancel"
+                                onClick={() => setShowSoftGateModal(false)}
+                                disabled={isForceCompleting}
+                            >
+                                Keep Chatting
+                            </button>
+                            <button 
+                                className="soft-gate-btn-proceed"
+                                onClick={handleForceCompleteAndDraft}
+                                disabled={isForceCompleting}
+                            >
+                                {isForceCompleting ? (
+                                    <><span className="spinner-sm" /> Overriding...</>
+                                ) : (
+                                    <><Sparkles size={14} /> Proceed Anyway</>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

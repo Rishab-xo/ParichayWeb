@@ -11,15 +11,29 @@ export const getActiveToken = () => {
 };
 
 /**
+ * Helper to safely format Authorization header value.
+ * Prevents double "Bearer ", double spaces, or empty/undefined tokens.
+ */
+export const formatAuthHeader = (rawToken) => {
+    if (!rawToken || typeof rawToken !== 'string') return null;
+    const cleanToken = rawToken.replace(/^Bearer\s+/i, '').trim();
+    if (!cleanToken || cleanToken === 'undefined' || cleanToken === 'null') {
+        return null;
+    }
+    return `Bearer ${cleanToken}`;
+};
+
+/**
  * Generic request helper with automatic auth header injection and error handling.
  */
 async function apiRequest(endpoint, options = {}, customToken = null) {
     const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
-    const token = customToken || getActiveToken();
+    const rawToken = customToken || getActiveToken();
+    const authHeader = formatAuthHeader(rawToken);
 
     const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...(authHeader ? { 'Authorization': authHeader } : {}),
         ...options.headers,
     };
 
@@ -127,10 +141,38 @@ export async function getTriageSession(sessionId, token = null) {
  * @param {string} [token] - Optional Clerk JWT token
  * @returns {Promise<string>} Markdown draft string
  */
-export async function generateDraftBrief(facts, domain, token = null) {
+export async function generateDraftBrief(factsPayload, domain, options = {}, token = null) {
+    const body = typeof factsPayload === 'object' && factsPayload !== null && !Array.isArray(factsPayload)
+        ? factsPayload
+        : {
+            facts: typeof factsPayload === 'string' ? factsPayload : '',
+            domain: domain,
+            categoryLabel: options.categoryLabel || domain,
+            gatheredFacts: options.gatheredFacts || null,
+            sessionId: options.sessionId || null,
+        };
     return apiRequest('/draft/generate', {
         method: 'POST',
-        body: JSON.stringify({ facts, domain }),
+        body: JSON.stringify(body),
+    }, token);
+}
+
+export async function generateDraftFromSession(sessionId, token = null) {
+    return apiRequest(`/draft/generate/${sessionId}`, {
+        method: 'POST',
+    }, token);
+}
+
+/**
+ * Force-complete a triage session (Soft Gate override).
+ * Marks the session as READY_FOR_DRAFTING even if coverage < 70%.
+ * @param {string} sessionId - UUID of the session
+ * @param {string} [token] - Optional Clerk JWT token
+ * @returns {Promise<{ sessionId: string, status: string, message: string }>}
+ */
+export async function forceCompleteSession(sessionId, token = null) {
+    return apiRequest(`/triage/${sessionId}/force-complete`, {
+        method: 'POST',
     }, token);
 }
 
@@ -171,6 +213,8 @@ export default {
     sendTriageMessage,
     getTriageSession,
     generateDraftBrief,
+    generateDraftFromSession,
+    forceCompleteSession,
     exportDocument,
     testAiConnection,
     getActiveToken,

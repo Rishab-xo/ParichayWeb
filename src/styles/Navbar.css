@@ -15,6 +15,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    gap: 12px;
 }
 
 .navbar-logo a {
@@ -24,11 +25,18 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .navbar-links {
     display: flex;
-    gap: 32px;
+    gap: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.navbar-links::-webkit-scrollbar {
+    display: none;
 }
 
 .navbar-links a {
@@ -37,6 +45,11 @@
     color: var(--text-muted);
     position: relative;
     transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.navbar-action {
+    flex-shrink: 0;
 }
 
 .navbar-links a:hover,
@@ -58,10 +71,11 @@
 .btn-primary {
     background-color: var(--color-primary);
     color: #fff;
-    padding: 10px 24px;
+    padding: 8px 18px;
     border-radius: 50px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
