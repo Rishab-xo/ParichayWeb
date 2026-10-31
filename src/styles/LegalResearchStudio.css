@@ -1,0 +1,288 @@
+/* ─── LEGAL RESEARCH STUDIO (MATCHING IMAGE 2) ─── */
+
+.research-studio-container {
+  display: flex;
+  height: calc(100vh - 120px);
+  min-height: 680px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ─── LEFT PANE: RESEARCH CHAT ─── */
+.research-chat-pane {
+  width: 320px;
+  min-width: 280px;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+}
+
+.research-chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.research-chat-msg.user .msg-text-bubble {
+  background: #f3f4f6;
+  color: #111827;
+  border-bottom-right-radius: 4px;
+}
+
+.research-chat-msg.ai .msg-text-bubble {
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-bottom-left-radius: 4px;
+}
+
+/* Chat Input Bar */
+.research-chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.research-chat-input-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.88rem;
+  color: #111827;
+}
+
+/* ─── CENTER PANE: RESEARCH MEMO CANVAS ─── */
+.research-memo-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  min-width: 400px;
+}
+
+.research-memo-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #ffffff;
+}
+
+.memo-paper-scroll {
+  flex: 1;
+  padding: 36px 48px;
+  overflow-y: auto;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.memo-paper-sheet {
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: #1f2937;
+}
+
+.memo-type-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 24px;
+}
+
+.memo-section-lead {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.memo-section-body {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin-bottom: 20px;
+  color: #374151;
+}
+
+.memo-footer-status {
+  text-align: right;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  padding-top: 24px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 40px;
+}
+
+/* ─── RIGHT PANE: AUTHORITIES SIDEBAR (MATCHING IMAGE 2) ─── */
+.research-authorities-pane {
+  width: 340px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  overflow-y: auto;
+  padding: 20px;
+  gap: 16px;
+}
+
+.authorities-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.authorities-header-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.authorities-header-title h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+.authorities-chevron {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.authorities-subtitle {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0 0 12px 0;
+}
+
+.authorities-tabs {
+  display: flex;
+  background: #f3f4f6;
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.authorities-tab-btn {
+  flex: 1;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.authorities-tab-btn.active {
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.authorities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.authority-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.authority-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.authority-card.selected {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+}
+
+.authority-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  color: #111827;
+}
+
+.authority-arrow {
+  color: #9ca3af;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.authority-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-used {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.authority-citation {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.authority-prop {
+  font-size: 0.82rem;
+  color: #374151;
+  line-height: 1.45;
+  margin: 2px 0 0 0;
+}
+
+.authority-card-actions {
+  display: flex;
+  margin-top: 6px;
+}
+
+.btn-add-to-chat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.btn-add-to-chat:hover {
+  background: #e5e7eb;
+  color: #111827;
+}

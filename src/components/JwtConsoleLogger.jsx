@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react';
 import { useAuth, useClerk } from '@clerk/clerk-react';
+import { registerTokenProvider } from '../services/authTokenManager';
 
 const JwtConsoleLogger = () => {
     const { getToken, isSignedIn, isLoaded } = useAuth();
     const clerk = useClerk();
+
+    useEffect(() => {
+        if (getToken) {
+            registerTokenProvider(getToken);
+        }
+    }, [getToken]);
 
     useEffect(() => {
         if (!isLoaded) return;
@@ -22,6 +29,7 @@ const JwtConsoleLogger = () => {
                     console.error('Failed to get JWT:', err);
                 }
             } else {
+                window.jwt = null;
                 console.log('🔒 You are not signed in. Please click Sign In (or run openSignIn() in console) to get your Bearer token.');
             }
         };

@@ -1,0 +1,393 @@
+/* ═════════════════════════════════════════════════════════════════════════
+   ACTS & STATUTES RESEARCH PAGE (REFERENCE IMAGE 5)
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.acts-page-container {
+  min-height: calc(100vh - var(--header-height, 70px));
+  background-color: #fbfbfc;
+  font-family: var(--font-main, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+  color: #111827;
+  padding-bottom: 80px;
+}
+
+/* ─── HERO & SEARCH ─── */
+.acts-hero {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px 28px 24px;
+}
+
+.acts-hero-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.03em;
+  margin: 0 0 20px 0;
+}
+
+.acts-search-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.acts-search-input {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 12px 20px 12px 46px;
+  font-size: 0.92rem;
+  color: #111827;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.acts-search-input:focus {
+  border-color: #a5b4fc;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.1);
+}
+
+.acts-search-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Jump to Act */
+.jump-acts-block {
+  margin-top: 10px;
+}
+
+.jump-acts-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.jump-acts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jump-pill {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #4b5563;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.jump-pill:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+/* ─── NEW CRIMINAL CODES SECTION (IMAGE 5) ─── */
+.new-criminal-codes-section {
+  max-width: 1180px;
+  margin: 16px auto 0 auto;
+  padding: 0 24px;
+}
+
+.new-codes-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.new-codes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.new-code-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.new-code-card:hover {
+  background-color: #f9fafb;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.new-code-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.new-code-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.new-code-desc {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ─── INDIAN PENAL CODE, 1860 SECTION (IMAGE 5) ─── */
+.ipc-sections-block {
+  max-width: 1180px;
+  margin: 48px auto 0 auto;
+  padding: 0 24px;
+}
+
+.ipc-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ipc-main-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.ipc-tag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.ipc-judgments-count {
+  font-size: 0.74rem;
+  font-weight: 600;
+  background-color: #ede9fe;
+  color: #6d28d9;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.btn-all-judgments {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #111827;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-all-judgments:hover {
+  text-decoration: underline;
+}
+
+.ipc-explanation {
+  font-size: 0.86rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  max-width: 900px;
+}
+
+/* Section Cards Grid (4 columns) */
+.ipc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.section-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.section-card:hover {
+  background-color: #f9fafb;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.section-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.section-number {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.bns-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.section-title {
+  font-size: 0.78rem;
+  color: #4b5563;
+  line-height: 1.35;
+}
+
+.show-more-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.btn-show-all-sections {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-show-all-sections:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+/* ─── MODAL ─── */
+.modal-content-section {
+  background-color: #ffffff;
+  border-radius: 16px;
+  max-width: 540px;
+  width: 90%;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.section-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 14px;
+}
+
+.section-modal-num {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.bns-tag-modal {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background-color: #ede9fe;
+  color: #6d28d9;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.section-modal-title {
+  font-size: 0.95rem;
+  color: #374151;
+  margin: 4px 0 0 0;
+}
+
+.statutory-text-box {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+
+.statutory-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.statutory-content {
+  font-size: 0.86rem;
+  color: #1f2937;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.section-modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-use-section {
+  background-color: #111827;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-use-section:hover {
+  background-color: #1f2937;
+}
+
+@media (max-width: 900px) {
+  .new-codes-grid {
+    grid-template-columns: 1fr;
+  }
+  .ipc-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

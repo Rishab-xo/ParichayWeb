@@ -1,23 +1,13 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 
-// Placeholder pages
+// Core Pages & Workflows
 import Home from './pages/Home';
-import WomenSafety from './pages/WomenSafety';
-import Documents from './pages/Documents';
-import DocumentFlow from './pages/DocumentFlow';
-import TriageResult from './pages/TriageResult';
-import LawyerDashboard from './pages/LawyerDashboard';
-import FindLawyer from './pages/FindLawyer';
-import LawyerProfile from './pages/LawyerProfile';
-import HowItWorks from './pages/HowItWorks';
-import ChatPage from './pages/ChatPage';
-import LawyerChat from './pages/LawyerChat';
-
-// Simple placeholders for now
-// const FindLawyer = () => <div className="container" style={{ padding: '40px' }}><h1>Find a Lawyer</h1><p>Coming soon...</p></div>;
-// const HowItWorks = () => <div className="container" style={{ padding: '40px' }}><h1>How it works</h1><p>Coming soon...</p></div>;
+import WorkspacePage from './pages/WorkspacePage';
+import JudgmentsPage from './pages/JudgmentsPage';
+import ActsPage from './pages/ActsPage';
+import { IntakeOrchestrator } from './components/IntakeOrchestrator';
 
 function App() {
   return (
@@ -25,16 +15,23 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="women-safety" element={<WomenSafety />} />
-          <Route path="documents" element={<Documents />} />
-          <Route path="document-flow" element={<DocumentFlow />} />
-          <Route path="triage" element={<TriageResult />} />
-          <Route path="lawyer-dashboard" element={<LawyerDashboard />} />
-          <Route path="find-lawyer" element={<FindLawyer />} />
-          <Route path="lawyer-profile" element={<LawyerProfile />} />
-          <Route path="how-it-works" element={<HowItWorks />} />
-          <Route path="chat" element={<ChatPage />} />
-          <Route path="lawyer-chat" element={<LawyerChat />} />
+          <Route path="judgments" element={<JudgmentsPage />} />
+          <Route path="acts" element={<ActsPage />} />
+          <Route path="arguments" element={<Navigate to="/workspaces?tab=free-arguments" replace />} />
+          <Route path="workspaces" element={<WorkspacePage />} />
+          <Route path="workspace" element={<WorkspacePage />} />
+          <Route path="workspaces/:workspaceId" element={<WorkspacePage />} />
+          <Route path="input" element={<WorkspacePage defaultView="home" />} />
+          <Route
+            path="intake"
+            element={
+              <div className="container" style={{ padding: '40px 0' }}>
+                <IntakeOrchestrator />
+              </div>
+            }
+          />
+          {/* Fallback to Workspaces */}
+          <Route path="*" element={<Navigate to="/workspaces" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>

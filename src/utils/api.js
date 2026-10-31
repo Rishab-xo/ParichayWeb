@@ -1,34 +1,15 @@
+import { getValidAuthToken, getActiveToken, formatAuthHeader } from '../services/authTokenManager';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1.0';
 
-/**
- * Helper to get the active Clerk JWT token if available.
- */
-export const getActiveToken = () => {
-    if (typeof window !== 'undefined' && window.jwt) {
-        return window.jwt;
-    }
-    return null;
-};
+export { getValidAuthToken, getActiveToken, formatAuthHeader };
 
 /**
- * Helper to safely format Authorization header value.
- * Prevents double "Bearer ", double spaces, or empty/undefined tokens.
- */
-export const formatAuthHeader = (rawToken) => {
-    if (!rawToken || typeof rawToken !== 'string') return null;
-    const cleanToken = rawToken.replace(/^Bearer\s+/i, '').trim();
-    if (!cleanToken || cleanToken === 'undefined' || cleanToken === 'null') {
-        return null;
-    }
-    return `Bearer ${cleanToken}`;
-};
-
-/**
- * Generic request helper with automatic auth header injection and error handling.
+ * Generic request helper with automatic auth header injection, token refresh, and error handling.
  */
 async function apiRequest(endpoint, options = {}, customToken = null) {
     const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
-    const rawToken = customToken || getActiveToken();
+    const rawToken = customToken || await getValidAuthToken();
     const authHeader = formatAuthHeader(rawToken);
 
     const headers = {
@@ -44,7 +25,19 @@ async function apiRequest(endpoint, options = {}, customToken = null) {
 
     const response = await fetch(url, config);
 
+    // Resilient 401 interceptor: If token expired, force Clerk to refresh and retry ONCE
+    if (response.status === 401 && !options._isRetry) {
+        console.warn('[API] 401 Unauthorized encountered, refreshing token and retrying request...');
+        const freshToken = await getValidAuthToken(true);
+        if (freshToken) {
+            return apiRequest(endpoint, { ...options, _isRetry: true }, freshToken);
+        }
+    }
+
     if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+            throw new Error('You are currently logged out. Please sign in to use this service.');
+        }
         let errorDetails = `HTTP ${response.status} ${response.statusText}`;
         try {
             const errorJson = await response.json();
@@ -205,6 +198,23 @@ export async function testAiConnection(message = 'Hello', model = '', token = nu
     return apiRequest('/ai/test', {
         method: 'POST',
         body: JSON.stringify({ message, model }),
+    }, token);
+}
+
+/**
+ * Submit case narrative and location to the Two-Pass Legal Pipeline (/triage/pipeline-brief).
+ * @param {string} userNarrative - Factual client dispute narrative
+ * @param {string} location - Jurisdiction / city (e.g., "Gurugram")
+ * @param {string} [token] - Optional auth token
+ * @returns {Promise<{ brief: string, location: string }>}
+ */
+export async function submitPipelineBrief(userNarrative, location = '', token = null) {
+    return apiRequest('/triage/pipeline-brief', {
+        method: 'POST',
+        body: JSON.stringify({
+            userNarrative,
+            location,
+        }),
     }, token);
 }
 

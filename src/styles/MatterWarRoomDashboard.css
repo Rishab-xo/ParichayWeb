@@ -1,0 +1,646 @@
+/* ─── CASE FILE / MATTER DASHBOARD (EXACT IMAGE 5 STYLES) ─── */
+
+.case-file-view-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 48px 80px 48px;
+  background-color: #ffffff;
+  color: #18181b;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.case-file-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 100px 20px;
+  color: #71717a;
+  font-size: 0.95rem;
+}
+
+/* 1. Dates Row */
+.case-file-dates-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: #71717a;
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+}
+
+/* 2. Title Row */
+.case-file-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 6px;
+}
+
+.case-file-title {
+  font-size: 2.15rem;
+  font-weight: 700;
+  color: #18181b;
+  letter-spacing: -0.025em;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.btn-new-chat-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #18181b;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-new-chat-pill:hover {
+  background-color: #27272a;
+}
+
+/* 3. Stats Line */
+.case-file-stats-line {
+  font-size: 14px;
+  color: #71717a;
+  margin-bottom: 14px;
+}
+
+/* 4. Description Row */
+.case-file-desc-row {
+  margin-bottom: 36px;
+}
+
+.btn-add-desc {
+  font-size: 14px;
+  color: #71717a;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-add-desc:hover {
+  color: #18181b;
+}
+
+.desc-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desc-input {
+  padding: 6px 12px;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #18181b;
+  width: 320px;
+  outline: none;
+}
+
+.desc-input:focus {
+  border-color: #18181b;
+}
+
+.btn-desc-save {
+  padding: 6px 14px;
+  background-color: #18181b;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-desc-cancel {
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #71717a;
+  cursor: pointer;
+}
+
+/* 5. Sections General */
+.case-file-section {
+  margin-bottom: 36px;
+}
+
+.case-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #18181b;
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.count-badge,
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f4f5;
+  color: #71717a;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 2px 8px;
+  min-width: 20px;
+}
+
+.btn-section-action,
+.btn-section-link,
+.btn-col-action {
+  font-size: 14px;
+  font-weight: 500;
+  color: #71717a;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+}
+
+.btn-section-action:hover,
+.btn-section-link:hover,
+.btn-col-action:hover {
+  color: #18181b;
+}
+
+/* Court Cases */
+.empty-court-cases-banner {
+  font-size: 14px;
+  color: #71717a;
+  line-height: 1.5;
+  padding: 4px 0;
+}
+
+.court-cases-cards-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.court-case-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #f4f4f5;
+  background: #fafafa;
+}
+
+.court-case-info-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.case-cnr-pill {
+  font-size: 12px;
+  font-family: monospace;
+  font-weight: 600;
+  background: #f4f4f5;
+  color: #18181b;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.case-court-heading {
+  font-size: 14px;
+  font-weight: 500;
+  color: #18181b;
+  margin: 0;
+}
+
+.case-hearing-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #71717a;
+}
+
+/* 6. Two-Column Grid */
+.case-file-two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+  row-gap: 24px;
+  margin-bottom: 36px;
+}
+
+.case-col-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.case-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.col-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.col-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #18181b;
+  letter-spacing: -0.015em;
+}
+
+.case-col-items-list,
+.case-authorities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.case-list-item-row {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.case-list-item-row:hover {
+  background-color: #f4f4f5;
+}
+
+.item-primary-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #18181b;
+  line-height: 1.4;
+}
+
+.item-secondary-sub {
+  font-size: 13px;
+  color: #71717a;
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+/* 7. Authorities */
+.authorities-section {
+  margin-top: 8px;
+}
+
+.authority-item-row {
+  padding: 12px 14px;
+}
+
+/* ─── MODAL STYLES ─── */
+.modal-backdrop-clean {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-card-clean {
+  background-color: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  padding: 24px;
+}
+
+.modal-header-clean {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header-clean h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #18181b;
+  margin: 0;
+}
+
+.btn-close-modal {
+  color: #71717a;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-close-modal:hover {
+  color: #18181b;
+}
+
+.modal-form-clean {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field-clean {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field-clean label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3f3f46;
+}
+
+.form-field-clean input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e4e4e7;
+  font-size: 14px;
+  color: #18181b;
+  outline: none;
+}
+
+.form-field-clean input:focus {
+  border-color: #18181b;
+}
+
+.modal-actions-clean {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-cancel-clean {
+  padding: 8px 16px;
+  border: 1px solid #e4e4e7;
+  background: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #71717a;
+  cursor: pointer;
+}
+
+.btn-save-clean {
+  padding: 8px 18px;
+  background-color: #18181b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ─── AUTHORITY DRAWER STYLES ─── */
+.authority-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.authority-drawer-panel {
+  width: 580px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.drawer-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid #f4f4f5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.drawer-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c3aed;
+}
+
+.drawer-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.drawer-primary-cit {
+  font-size: 13px;
+  color: #71717a;
+}
+
+.drawer-close-btn {
+  background: none;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+}
+
+.drawer-tabs-bar {
+  display: flex;
+  padding: 0 28px;
+  border-bottom: 1px solid #f4f4f5;
+  gap: 20px;
+}
+
+.drawer-tab-btn {
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #71717a;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.drawer-tab-btn.active {
+  color: #18181b;
+  border-bottom-color: #18181b;
+}
+
+.drawer-content-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+
+.drawer-irac-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.irac-card {
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #f4f4f5;
+}
+
+.irac-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #71717a;
+  margin: 0 0 8px 0;
+}
+
+.irac-card p,
+.irac-card ul {
+  font-size: 14px;
+  color: #18181b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.irac-card ul {
+  padding-left: 20px;
+}
+
+.irac-card.highlight-card {
+  background: #fbfbfe;
+  border-color: #ede9fe;
+}
+
+.irac-card.highlight-card h4 {
+  color: #7c3aed;
+}
+
+.drawer-pages-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawer-page-card {
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.drawer-page-number {
+  padding: 8px 14px;
+  background: #f4f4f5;
+  font-size: 12px;
+  font-weight: 600;
+  color: #71717a;
+}
+
+.drawer-page-text {
+  padding: 16px;
+  font-size: 13px;
+  font-family: inherit;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #18181b;
+  margin: 0;
+}
+
+/* ─── EMPTY COLUMN STATES ─── */
+.case-empty-column-box {
+  padding: 16px 14px;
+  background-color: #fafafa;
+  border: 1px dashed #e4e4e7;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.case-empty-column-text {
+  font-size: 13.5px;
+  color: #71717a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.btn-empty-start-chat,
+.btn-empty-upload-file {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6366f1;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-empty-start-chat:hover,
+.btn-empty-upload-file:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.authorities-empty-box {
+  background-color: transparent;
+  border: none;
+  padding: 8px 4px;
+}
+

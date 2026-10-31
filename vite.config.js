@@ -27,6 +27,10 @@ export default defineConfig({
         rewrite: (path) => '/webhook/ai-agent',
         secure: false,
       },
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
     },
   },
 })
